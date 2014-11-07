@@ -9,9 +9,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ public class PinActivity extends Activity {
     private static final int PIN_SIZE = 5;
 
     private List<Integer> mSelected = new ArrayList<Integer>();
+    private double mVelocity;
     private int mSelection;
     private View mView;
 
@@ -36,6 +39,8 @@ public class PinActivity extends Activity {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mSelection = 0;
         mGestureDetector = createGestureDetector();
@@ -75,9 +80,9 @@ public class PinActivity extends Activity {
                 if (gesture == Gesture.TAP) {
                     selectedNumber();
                 } else if (gesture == Gesture.SWIPE_LEFT) {
-                    changeNumbers(1);
+                    changeNumbers(true);
                 } else if (gesture == Gesture.SWIPE_RIGHT) {
-                    changeNumbers(-1);
+                    changeNumbers(false);
                 }
                 return false;
             }
@@ -85,11 +90,7 @@ public class PinActivity extends Activity {
         gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
             @Override
             public boolean onScroll(float displacement, float delta, float velocity) {
-                Log.i("DIS: ", displacement + "");
-                Log.i("DEL: ", delta + "");
-                Log.i("VEL: ", velocity + "");
-
-                //changeNumbers(velocity);
+                mVelocity = Math.abs(velocity);
                 return true;
             }
         });
@@ -114,19 +115,24 @@ public class PinActivity extends Activity {
         tv.setText(mask + rest);
     }
 
-    private void changeNumbers(float velocity) {
-        boolean fromLeft;
-        int change;
-        if (velocity > 0) {
-            change = 1;
-            fromLeft = true;
-        } else {
-            change = -1;
-            fromLeft = false;
+    private void changeNumbers(final boolean fromLeft) {
+        int movements = 1;
+        if (mVelocity > 8) {
+            movements = 3;
+        } else if (mVelocity > 5) {
+            movements = 2;
         }
 
-        mSelection = circularInt(change);
-        updateView(fromLeft);
+        Handler handler = new Handler();
+        for (int i = 0; i < movements; i++) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mSelection = circularInt(fromLeft ? 1 : -1);
+                    updateView(fromLeft);
+                }
+            }, 100 + (100 * i));
+        }
     }
 
     private void updateView(boolean fromLeft) {
@@ -139,7 +145,7 @@ public class PinActivity extends Activity {
 
     private void setTextViewTextAndAnimate(String text, int id, boolean fromLeft) {
         Animation animation = AnimationUtils.loadAnimation(this,
-                fromLeft ? R.anim.left_to_right : R.anim.right_to_left);
+                fromLeft ? R.anim.right_to_left : R.anim.left_to_right);
 
         TextView tv = (TextView) mView.findViewById(id);
         tv.startAnimation(animation);
