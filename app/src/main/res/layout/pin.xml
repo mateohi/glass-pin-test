@@ -10,7 +10,7 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="***__" />
+        android:text="_ _ _ _ _" />
 
     <RelativeLayout
         android:layout_centerInParent="true"
@@ -21,10 +21,10 @@
         <TextView
             android:id="@+id/first"
             android:layout_centerVertical="true"
-            android:textSize="75sp"
+            android:textSize="50sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="4" />
+            android:text="8"/>
 
         <TextView
             android:id="@+id/second"
@@ -35,7 +35,7 @@
             android:layout_toRightOf="@id/first"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="5" />
+            android:text="9"/>
 
         <TextView
             android:id="@+id/third"
@@ -46,7 +46,7 @@
             android:layout_toRightOf="@id/second"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="6" />
+            android:text="0"/>
 
         <TextView
             android:id="@+id/fourth"
@@ -57,15 +57,15 @@
             android:layout_toRightOf="@id/third"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="7" />
+            android:text="1"/>
 
         <TextView
             android:id="@+id/fifth"
             android:layout_centerVertical="true"
-            android:textSize="75sp"
+            android:textSize="50sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/fourth"
-            android:text="8" />
+            android:text="2"/>
     </RelativeLayout>
 </RelativeLayout>

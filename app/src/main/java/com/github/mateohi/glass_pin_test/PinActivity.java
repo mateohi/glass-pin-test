@@ -1,14 +1,19 @@
 package com.github.mateohi.glass_pin_test;
 
+import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardBuilder;
 
 import android.app.Activity;
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +31,7 @@ public class PinActivity extends Activity {
     private View mView;
 
     private GestureDetector mGestureDetector;
+    private AudioManager mAudio;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -33,13 +39,14 @@ public class PinActivity extends Activity {
 
         mSelection = 0;
         mGestureDetector = createGestureDetector();
+        mAudio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         mView = new CardBuilder(this, CardBuilder.Layout.EMBED_INSIDE)
                 .setEmbeddedLayout(R.layout.pin)
                 .setFootnote("scroll to change selection")
                 .getView();
 
-        updateView();
+        setContentView(mView);
     }
 
     @Override
@@ -67,6 +74,10 @@ public class PinActivity extends Activity {
             public boolean onGesture(Gesture gesture) {
                 if (gesture == Gesture.TAP) {
                     selectedNumber();
+                } else if (gesture == Gesture.SWIPE_LEFT) {
+                    changeNumbers(1);
+                } else if (gesture == Gesture.SWIPE_RIGHT) {
+                    changeNumbers(-1);
                 }
                 return false;
             }
@@ -78,7 +89,7 @@ public class PinActivity extends Activity {
                 Log.i("DEL: ", delta + "");
                 Log.i("VEL: ", velocity + "");
 
-                changeNumbers(velocity);
+                //changeNumbers(velocity);
                 return true;
             }
         });
@@ -86,6 +97,7 @@ public class PinActivity extends Activity {
     }
 
     private void selectedNumber() {
+        mAudio.playSoundEffect(Sounds.SELECTED);
         mSelected.add(mSelection);
 
         if (mSelected.size() == PIN_SIZE) {
@@ -95,44 +107,51 @@ public class PinActivity extends Activity {
             mSelected.clear();
         }
 
-        String mask = StringUtils.repeat('*', mSelected.size());
-        String rest = StringUtils.repeat('_', PIN_SIZE - mSelected.size());
+        String mask = StringUtils.repeat('*', mSelected.size()).replace("", " ").trim();
+        String rest = StringUtils.repeat('_', PIN_SIZE - mSelected.size()).replace("", " ").trim();
 
-        mask = StringUtils.join(mask.toCharArray(), " ");
-        rest = StringUtils.join(rest.toCharArray(), " ");
-
-        setTextViewText(mask + rest, R.id.mask);
+        TextView tv = (TextView) mView.findViewById(R.id.mask);
+        tv.setText(mask + rest);
     }
 
     private void changeNumbers(float velocity) {
+        boolean fromLeft;
         int change;
         if (velocity > 0) {
             change = 1;
+            fromLeft = true;
         } else {
             change = -1;
+            fromLeft = false;
         }
 
-        mSelection = Math.abs((mSelection + change) % TEN);
-        updateView();
+        mSelection = circularInt(change);
+        updateView(fromLeft);
     }
 
-    private void updateView() {
-        setTextViewText(circular(-2), R.id.first);
-        setTextViewText(circular(-1), R.id.second);
-        setTextViewText(circular(0), R.id.third);
-        setTextViewText(circular(1), R.id.fourth);
-        setTextViewText(circular(2), R.id.fifth);
-
-        setContentView(mView);
+    private void updateView(boolean fromLeft) {
+        setTextViewTextAndAnimate(circular(-2), R.id.first, fromLeft);
+        setTextViewTextAndAnimate(circular(-1), R.id.second, fromLeft);
+        setTextViewTextAndAnimate(circular(0), R.id.third, fromLeft);
+        setTextViewTextAndAnimate(circular(1), R.id.fourth, fromLeft);
+        setTextViewTextAndAnimate(circular(2), R.id.fifth, fromLeft);
     }
 
-    private void setTextViewText(String text, int id) {
+    private void setTextViewTextAndAnimate(String text, int id, boolean fromLeft) {
+        Animation animation = AnimationUtils.loadAnimation(this,
+                fromLeft ? R.anim.left_to_right : R.anim.right_to_left);
+
         TextView tv = (TextView) mView.findViewById(id);
+        tv.startAnimation(animation);
         tv.setText(text);
     }
 
     private String circular(int n) {
-        return String.valueOf((mSelection + n + TEN) % TEN);
+        return String.valueOf(circularInt(n));
+    }
+
+    private int circularInt(int n) {
+        return (mSelection + n + TEN) % TEN;
     }
 
 }
