@@ -1,1 +1,1 @@
-<trigger keyword="Ask my pin" />
+<trigger command="SHOW_ME_A_DEMO" />

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TextView
+        android:id="@+id/mask"
+        android:textSize="25sp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="***__" />
+
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mask">
+
+        <TextView
+            android:id="@+id/first"
+            android:layout_centerVertical="true"
+            android:textSize="75sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4" />
+
+        <TextView
+            android:id="@+id/second"
+            android:layout_centerVertical="true"
+            android:textSize="75sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/first"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="5" />
+
+        <TextView
+            android:id="@+id/third"
+            android:layout_centerVertical="true"
+            android:textSize="100sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/second"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="6" />
+
+        <TextView
+            android:id="@+id/fourth"
+            android:layout_centerVertical="true"
+            android:textSize="75sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/third"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="7" />
+
+        <TextView
+            android:id="@+id/fifth"
+            android:layout_centerVertical="true"
+            android:textSize="75sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/fourth"
+            android:text="8" />
+    </RelativeLayout>
+</RelativeLayout>

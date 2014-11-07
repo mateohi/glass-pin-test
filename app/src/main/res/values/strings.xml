@@ -3,5 +3,6 @@
 
     <string name="app_name">glass-pin-test</string>
     <string name="title_activity_pin">Pin</string>
+    <string name="pin_trigger">Ask my pin</string>
 
 </resources>
