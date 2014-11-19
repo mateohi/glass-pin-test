@@ -106,6 +106,7 @@ public class PinActivity extends Activity {
             // terminamos
             Log.i("PIN-", pin);
             mSelected.clear();
+            mAudio.playSoundEffect(Sounds.SUCCESS);
         }
 
         String mask = StringUtils.repeat('*', mSelected.size()).replace("", " ").trim();
