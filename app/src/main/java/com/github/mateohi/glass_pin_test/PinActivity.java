@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -105,6 +106,7 @@ public class PinActivity extends Activity {
             String pin = StringUtils.join(mSelected);
             // terminamos
             Log.i("PIN-", pin);
+            Toast.makeText(this, pin, Toast.LENGTH_SHORT).show();
             mSelected.clear();
             mAudio.playSoundEffect(Sounds.SUCCESS);
         }
@@ -118,9 +120,9 @@ public class PinActivity extends Activity {
 
     private void changeNumbers(final boolean fromLeft) {
         int movements = 1;
-        if (mVelocity > 8) {
+        if (mVelocity > 9) {
             movements = 3;
-        } else if (mVelocity > 5) {
+        } else if (mVelocity > 6) {
             movements = 2;
         }
 
