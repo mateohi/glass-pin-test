@@ -4,6 +4,7 @@ import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardBuilder;
+import com.google.common.collect.Lists;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,7 +22,6 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PinActivity extends Activity {
@@ -29,7 +29,7 @@ public class PinActivity extends Activity {
     private static final int TEN = 10;
     private static final int PIN_SIZE = 5;
 
-    private List<Integer> mSelected = new ArrayList<Integer>();
+    private List<Integer> mSelected = Lists.newArrayList();
     private double mVelocity;
     private int mSelection;
     private View mView;
@@ -91,6 +91,9 @@ public class PinActivity extends Activity {
         gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
             @Override
             public boolean onScroll(float displacement, float delta, float velocity) {
+                Log.i("displacement : ", displacement + "");
+                Log.i("delta : ", delta + "");
+                Log.i("velocity : ", velocity + "");
                 mVelocity = Math.abs(velocity);
                 return true;
             }
